@@ -23,7 +23,7 @@ Ensure you have followed the following sections described in the `README.md`:
 First, we'll deploy our contract to the Polygon testnet. To do so, execute:
 
 ```
-npx hardhat run scripts/deploy.ts --network polygon_testnet
+npx hardhat deploy --network polygon_testnet
 ```
 
 Once the deployment completes, let's locate our contract on PolygonScan.

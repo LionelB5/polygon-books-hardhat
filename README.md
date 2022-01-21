@@ -68,7 +68,7 @@ When deploying our smart contract, we may deploy to our local blockchain, or to 
 To deploy the contract locally, simply execute:
 
 ```bash
-npx hardhat run scripts/deploy.ts
+npx hardhat deploy
 ```
 
 This will compile and deploy the smart contract to your local `hardhat` network.
@@ -81,18 +81,20 @@ network is very quick, and good for running tests and checking if our contracts 
 successfully, but if one wants to actually interact with the deployed contract, its better
 to deploy to the `localhost` network (not to be confused with the `hardhat` network!).
 
-Before we can deploy to our `localhost` network, we need to spin up our own local node.
-This can be easily done by executing:
+Executing the command to spin up a local node will automatically run the deployment scripts
+in the `deployments` folder, so we won't have to execute a `npx hardhat deploy`.
+
+This spin up a local node, execute:
 
 ```bash
-npx hardhat node
+# optionally supply the `no-deploy` flag to prevent any deployments from executing
+npx hardhat node --network localhost
 ```
 
-This will spin up a local node that we can use for our deployment. To deploy to this local node,
-in another terminal, execute:
+To manually deploy to this local node, in another terminal, execute:
 
 ```bash
-npx hardhat run scripts/deploy.ts --network localhost
+npx hardhat deploy --network localhost
 ```
 
 At this point, if you check in on your node, you'll see some logs indicating that the contract was
@@ -111,6 +113,8 @@ const contract = await ethers.getContractAt("CryptoBooks", contractAddress);
 balance = await contract.balanceOf('<address_here>');
 ```
 
+TODO: Document mocking of Chainlink VRF Coordinator and Link Token in local environments
+
 ### Deployment to a remote blockchain (testnet)
 
 Before deploying to the testnet, ensure you have some testnet MATIC; since we are modifying
@@ -122,14 +126,8 @@ key stored in your `.env` file.
 To deploy to the testnet execute:
 
 ```
-npx hardhat run scripts/deploy.ts --network polygon_testnet
+npx hardhat deploy --network polygon_testnet
 ```
-
-**Note:** There is currently a bug with hardhat and the polygon testnet, it's likely the address printed to your terminal
-purported to be the deployed contract's address on the blockchain is inaccurate. See
-[this github issue](https://github.com/nomiclabs/hardhat/issues/2162) for more details. To retrieve the correct address of your
-deployed contract, navigate to polygonscan and look up your wallet address (corresponding to the private key in your `.env` file).
-From here you should see a record of the contract creation, along with the contracts actual address.
 
 You're now free to interact with the contract as described in `Deployment to a local blockchain` by spinning up a hardhat console:
 
@@ -146,7 +144,7 @@ via MetaMask.
 **Note:** Do note what is mentioned in the previous section, there is a bug with HardHat and the polygon testnet, so ensure you
 retrieve the correct contract address for verification.
 
-This can be done by executing the following command:
+To verify the contract, execute the following command:
 
 ```
 npx hardhat verify --network polygon_testnet <contract address> <... parameters provided to contract constructor at deploy time>
@@ -157,3 +155,7 @@ For example, to verify the contract in this repository you would execute:
 ```
 npx hardhat verify --network polygon_testnet <contract address> 0x8C7382F9D8f56b33781fE506E897a4F1e2d17255 0x326C977E6efc84E512bB9C30f76E30c160eD06FB 0x6e75b569a01ef56d18cab6a8e71e6600d6ce853834d4a5748b720d06f878b3a4
 ```
+
+TODO: This verification process should be easily automatable (prevent having to provide parameters manually)
+
+TODO: Document test execution and mock configuration

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
@@ -25,14 +25,17 @@ contract CryptoBooks is ERC721URIStorage, VRFConsumerBase {
     mapping(bytes32 => address) public requestToSender;
     mapping(bytes32 => uint256) public requestToTokenId;
 
+    event RequestedRandomness(bytes32 requestId);
+
     constructor(
         address _VRFCoordinator,
         address _LinkToken,
-        bytes32 _keyHash
+        bytes32 _keyHash,
+        uint256 _chainlinkFee
     ) VRFConsumerBase(_VRFCoordinator, _LinkToken) ERC721("BookNFT", "BOOK") {
         vrfCoordinator = _VRFCoordinator;
         keyHash = _keyHash;
-        fee = 0.1 * 10**18; //0.1 LINK
+        fee = _chainlinkFee;
     }
 
     function requestNewRandomBook(string memory name, string memory author)
@@ -40,6 +43,7 @@ contract CryptoBooks is ERC721URIStorage, VRFConsumerBase {
         returns (bytes32)
     {
         bytes32 requestId = requestRandomness(keyHash, fee);
+        emit RequestedRandomness(requestId);
         requestToBookName[requestId] = name;
         requestToAuthorName[requestId] = author;
         requestToSender[requestId] = msg.sender;
