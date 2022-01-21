@@ -127,7 +127,7 @@ We can mint tokens using the hardhat console, or by using MetaMask + Polygonscan
 Polygonscan.
 
 Navigate to your contract on Polygonscan, and go to `Write Contract`, here you will see all the available
-functions within the smart contract that modify the state of the blockchain. All of these function will cost
+functions within the smart contract that modify the state of the blockchain. All of these functions will cost
 MATIC to invoke. Conversely, under `Read Contract` are all the read only functions. These functions cost no
 MATIC to invoke, and can be called for free, since they don't modify the state of the blockchain.
 
@@ -164,9 +164,9 @@ To properly understand NFT metadata, we first need to grasp the concept of on-ch
 
 - On-chain metadata is metadata stored directly on the blockchain, examples of on-chain metadata for our
   freshly minted NFT is:
-  - It's name
-  - It's number of pages
-  - It's author
+  - Its name
+  - Its number of pages
+  - Its author
 - Off-chain metadata is metadata stored external to the blockchain. This could be on a centralized server, or on
   a decentralized network such as IPFS. Generally IPFS is preferred, due to its decentralized nature, and no
   single point of failure.
