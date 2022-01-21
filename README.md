@@ -141,9 +141,6 @@ If we want to be able to browse the source code of our contract on PolygonScan (
 need to verify the contract using PolygonScan's API. Doing so will also let us interact with all of our contract's functions
 via MetaMask.
 
-**Note:** Do note what is mentioned in the previous section, there is a bug with HardHat and the polygon testnet, so ensure you
-retrieve the correct contract address for verification.
-
 To verify the contract, execute the following command:
 
 ```
