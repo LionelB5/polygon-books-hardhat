@@ -20,7 +20,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 const config: HardhatUserConfig = {
   solidity: "0.8.9",
   networks: {
-    matic: {
+    polygon_testnet: {
       url: "https://rpc-mumbai.maticvigil.com",
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
@@ -31,7 +31,7 @@ const config: HardhatUserConfig = {
     currency: "AUD",
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: { polygonMumbai: process.env.POLYGON_SCAN_API_KEY },
   },
 };
 
