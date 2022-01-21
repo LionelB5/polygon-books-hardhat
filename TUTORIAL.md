@@ -5,6 +5,9 @@ This tutorial will take you through the steps required to create a simple NFT on
 By the end of this tutorial you will have created the following NFT, and it will be visible on OpenSea (on OpenSea's
 testnet instance).
 
+This tutorial is inspired by, and draws heavily on the knowledge shared in Patrick Collins'
+[excellent talk done for the Chainlink Hackathon Workshop](https://youtu.be/EzZEx0lumr0).
+
 ![OpenSea Listing](tutorial_images/opensea_nft.png)
 
 ## Getting started
