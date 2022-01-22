@@ -88,7 +88,7 @@ This spin up a local node, execute:
 
 ```bash
 # optionally supply the `no-deploy` flag to prevent any deployments from executing
-npx hardhat node --network localhost
+npx hardhat node
 ```
 
 To manually deploy to this local node, in another terminal, execute:
