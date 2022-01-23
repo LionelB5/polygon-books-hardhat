@@ -1,13 +1,15 @@
+import { LogLevel } from "@ethersproject/logger";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { deployments, ethers, run } from "hardhat";
 import { Deployment } from "hardhat-deploy/dist/types";
-import { CryptoBooks } from "../../typechain-types";
+import { CryptoBooks, LinkToken } from "../../typechain-types";
 
 describe("CryptoBooks", () => {
   let LinkToken: Deployment;
   let VRFCoordinatorMock: Deployment;
   let cryptoBooks: CryptoBooks;
+  let linkToken: LinkToken;
   let signers: SignerWithAddress[];
   let defaultSigner: SignerWithAddress;
 
@@ -18,18 +20,22 @@ describe("CryptoBooks", () => {
     VRFCoordinatorMock = await deployments.get("VRFCoordinatorMock");
     signers = await ethers.getSigners();
     defaultSigner = signers[0];
-    // @ts-ignore
     cryptoBooks = await ethers.getContractAt(
       "CryptoBooks",
       BookDeployment.address,
       defaultSigner
     );
-    // TODO: Find a better way to fund link that doesn't rely on a command or spam the logs
-    await run("fund-link", {
-      contract: cryptoBooks.address,
-      linkaddress: LinkToken.address,
-      fundAmount: 1,
-    });
+
+    // modify the ethers log level to suppress `Duplicate definition` warnings
+    // https://github.com/ethers-io/ethers.js/issues/905
+    ethers.utils.Logger.setLogLevel(LogLevel.ERROR);
+    linkToken = await ethers.getContractAt(
+      "LinkToken",
+      LinkToken.address,
+      defaultSigner
+    );
+    ethers.utils.Logger.setLogLevel(LogLevel.WARNING);
+    await linkToken.transfer(cryptoBooks.address, "100000000000000000");
   });
 
   describe("requestNewRandomBook", () => {
@@ -63,7 +69,6 @@ describe("CryptoBooks", () => {
       const receipt = await transaction.wait();
       const requestId = receipt.events![3].args![0];
       const senderAddress = await cryptoBooks.requestToSender(requestId);
-      console.log("default signer address: " + defaultSigner.getAddress());
       expect(senderAddress).to.equal(defaultSigner.address);
     });
 
