@@ -20,7 +20,6 @@ const deployCryptoBooks: DeployFunction = async function (
     LinkToken = await get("LinkToken");
     VRFCoordinatorMock = await get("VRFCoordinatorMock");
     linkTokenAddress = LinkToken.address;
-    console.log("LinkToken address: " + LinkToken.address);
     vrfCoordinatorAddress = VRFCoordinatorMock.address;
   } else {
     linkTokenAddress = networkConfig[chainId].linkToken;
