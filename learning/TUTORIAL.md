@@ -12,6 +12,9 @@ This tutorial is inspired by, and draws heavily on the knowledge shared in Patri
 
 ## Getting started
 
+**Note:** This project has evolved since writing this tutorial, checkout the following commit to ensure you are
+using a version of this project compatible with this tutorial: `f586542b2eb9c4ce8903469883215c1ca70c735c`
+
 Ensure you have followed the following sections described in the `README.md`:
 
 - Configure MetaMask to connect to the Polygon Mumbai Testnet

@@ -1,7 +1,7 @@
 import { LogLevel } from "@ethersproject/logger";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
-import { deployments, ethers, run } from "hardhat";
+import { deployments, ethers } from "hardhat";
 import { Deployment } from "hardhat-deploy/dist/types";
 import { CryptoBooks, LinkToken } from "../../typechain-types";
 
@@ -10,35 +10,30 @@ describe("CryptoBooks", () => {
   let VRFCoordinatorMock: Deployment;
   let cryptoBooks: CryptoBooks;
   let linkToken: LinkToken;
-  let signers: SignerWithAddress[];
-  let defaultSigner: SignerWithAddress;
+  let owner: SignerWithAddress;
+  let primarySigner: SignerWithAddress;
 
   beforeEach(async () => {
     await deployments.fixture(["books", "mocks"]);
     const BookDeployment = await deployments.get("CryptoBooks");
     LinkToken = await deployments.get("LinkToken");
     VRFCoordinatorMock = await deployments.get("VRFCoordinatorMock");
-    signers = await ethers.getSigners();
-    defaultSigner = signers[0];
+    [owner, primarySigner] = await ethers.getSigners();
     cryptoBooks = await ethers.getContractAt(
       "CryptoBooks",
       BookDeployment.address,
-      defaultSigner
+      primarySigner
     );
 
     // modify the ethers log level to suppress `Duplicate definition` warnings
     // https://github.com/ethers-io/ethers.js/issues/905
     ethers.utils.Logger.setLogLevel(LogLevel.ERROR);
-    linkToken = await ethers.getContractAt(
-      "LinkToken",
-      LinkToken.address,
-      defaultSigner
-    );
+    linkToken = await ethers.getContractAt("LinkToken", LinkToken.address);
     ethers.utils.Logger.setLogLevel(LogLevel.WARNING);
     await linkToken.transfer(cryptoBooks.address, "100000000000000000");
   });
 
-  describe("requestNewRandomBook", () => {
+  describe("#requestNewRandomBook", () => {
     it("should update the `requestToBookName` mapping with the given book name", async () => {
       const transaction = await cryptoBooks.requestNewRandomBook(
         "fake-book-name",
@@ -69,7 +64,7 @@ describe("CryptoBooks", () => {
       const receipt = await transaction.wait();
       const requestId = receipt.events![3].args![0];
       const senderAddress = await cryptoBooks.requestToSender(requestId);
-      expect(senderAddress).to.equal(defaultSigner.address);
+      expect(senderAddress).to.equal(primarySigner.address);
     });
 
     // TODO: Test `fulfillRandomness` & `setTokenURI`

@@ -2,15 +2,18 @@
 
 pragma solidity ^0.8.7;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
+import "./chainlink/VRFConsumerBaseUpgradeable.sol";
 
-contract CryptoBooks is ERC721URIStorage, VRFConsumerBase {
+contract CryptoBooks is
+    Initializable,
+    ERC721URIStorageUpgradeable,
+    VRFConsumerBaseUpgradeable
+{
     bytes32 internal keyHash;
     uint256 internal fee;
 
-    address public vrfCoordinator;
-    uint256 public randomResult;
+    address private vrfCoordinator;
 
     struct Book {
         string author;
@@ -27,12 +30,14 @@ contract CryptoBooks is ERC721URIStorage, VRFConsumerBase {
 
     event RequestedRandomness(bytes32 requestId);
 
-    constructor(
+    function initialize(
         address _VRFCoordinator,
-        address _LinkToken,
+        address _linkToken,
         bytes32 _keyHash,
         uint256 _chainlinkFee
-    ) VRFConsumerBase(_VRFCoordinator, _LinkToken) ERC721("BookNFT", "BOOK") {
+    ) public initializer {
+        __VRFConsumerBase_init(_VRFCoordinator, _linkToken);
+        __ERC721_init_unchained("CryptoBooks", "BOOK");
         vrfCoordinator = _VRFCoordinator;
         keyHash = _keyHash;
         fee = _chainlinkFee;
@@ -68,7 +73,10 @@ contract CryptoBooks is ERC721URIStorage, VRFConsumerBase {
     }
 
     function setTokenURI(uint256 tokenId, string memory _tokenURI) public {
-        require(_isApprovedOrOwner(_msgSender(), tokenId), "Not approved or owner");
+        require(
+            _isApprovedOrOwner(_msgSender(), tokenId),
+            "Not approved or owner"
+        );
         _setTokenURI(tokenId, _tokenURI);
     }
 }

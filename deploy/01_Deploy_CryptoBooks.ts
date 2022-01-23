@@ -6,9 +6,9 @@ import { networkConfig } from "../helper-hardhat-config";
 const deployCryptoBooks: DeployFunction = async function (
   hre: HardhatRuntimeEnvironment
 ) {
-  const { deployments, getNamedAccounts, getChainId } = hre;
-  const { deploy, get } = deployments;
-  const { deployer } = await getNamedAccounts();
+  const { deployments, getChainId, getNamedAccounts } = hre;
+  const { deployer, proxyOwner } = await getNamedAccounts();
+  const { get, deploy } = deployments;
   const chainId = await getChainId();
 
   let linkTokenAddress: string | undefined;
@@ -30,8 +30,23 @@ const deployCryptoBooks: DeployFunction = async function (
   const chainlinkFee: string = networkConfig[chainId].chainlinkFee;
   await deploy("CryptoBooks", {
     from: deployer,
-    args: [vrfCoordinatorAddress, linkTokenAddress, keyHash, chainlinkFee],
     log: true,
+    proxy: {
+      proxyContract: "TransparentUpgradeableProxy",
+      viaAdminContract: "ProxyAdmin",
+      owner: proxyOwner,
+      execute: {
+        init: {
+          methodName: "initialize",
+          args: [
+            vrfCoordinatorAddress,
+            linkTokenAddress,
+            keyHash,
+            chainlinkFee,
+          ],
+        },
+      },
+    },
   });
 };
 export default deployCryptoBooks;

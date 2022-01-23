@@ -2,6 +2,9 @@
 
 A simple project to learn more about developing smart contract on polygon.
 
+Note that if you are a beginner, I suggest checking out the following commit, it is a version of the project that doesn't
+make use of a transparent upgradeable proxy, it is far more straightforward and beginner friendly: `f586542b2eb9c4ce8903469883215c1ca70c735c`
+
 ## Local Development Environment Setup
 
 Install all required dependencies using NPM: `npm install`
@@ -113,6 +116,8 @@ const contract = await ethers.getContractAt("CryptoBooks", contractAddress);
 balance = await contract.balanceOf('<address_here>');
 ```
 
+TODO: Update this example & ensure it works with the new transparent upgradeable proxy.
+
 TODO: Document mocking of Chainlink VRF Coordinator and Link Token in local environments
 
 ### Deployment to a remote blockchain (testnet)
@@ -126,13 +131,13 @@ key stored in your `.env` file.
 To deploy to the testnet execute:
 
 ```
-npx hardhat deploy --network polygon_testnet
+npx hardhat deploy --network mumbai
 ```
 
 You're now free to interact with the contract as described in `Deployment to a local blockchain` by spinning up a hardhat console:
 
 ```
-npx hardhat console --network polygon_testnet
+npx hardhat console --network mumbai
 ```
 
 #### Verifying our contract
@@ -144,15 +149,21 @@ via MetaMask.
 To verify the contract, execute the following command:
 
 ```
-npx hardhat verify --network polygon_testnet <contract address> <... parameters provided to contract constructor at deploy time>
+npx hardhat verify --network mumbai <contract address> <... parameters provided to contract constructor at deploy time>
 ```
 
 For example, to verify the contract in this repository you would execute:
 
 ```
-npx hardhat verify --network polygon_testnet <contract address> 0x8C7382F9D8f56b33781fE506E897a4F1e2d17255 0x326C977E6efc84E512bB9C30f76E30c160eD06FB 0x6e75b569a01ef56d18cab6a8e71e6600d6ce853834d4a5748b720d06f878b3a4
+npx hardhat verify --network mumbai <contract address> 0x8C7382F9D8f56b33781fE506E897a4F1e2d17255 0x326C977E6efc84E512bB9C30f76E30c160eD06FB 0x6e75b569a01ef56d18cab6a8e71e6600d6ce853834d4a5748b720d06f878b3a4
 ```
+
+TODO: Update verification instructions to discuss verification of proxy, proxy admin and implementation.
 
 TODO: This verification process should be easily automatable (prevent having to provide parameters manually)
 
 TODO: Document test execution and mock configuration
+
+TODO: Document custom VRFConsumerBase needed for upgrade functionality
+
+TODO: Document custom TransparentUpgradeableProxy constructor, used for compatibility with hardhat deploy
