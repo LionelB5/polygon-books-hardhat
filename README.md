@@ -1,9 +1,6 @@
 # polygon-books-hardhat
 
-A simple project to learn more about developing smart contract on polygon.
-
-Note that if you are a beginner, I suggest checking out the following commit, it is a version of the project that doesn't
-make use of a transparent upgradeable proxy, it is far more straightforward and beginner friendly: `f586542b2eb9c4ce8903469883215c1ca70c735c`
+A simple project to learn more about developing smart contracts using Solidity.
 
 ## Local Development Environment Setup
 
