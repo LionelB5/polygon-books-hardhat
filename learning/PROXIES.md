@@ -187,7 +187,7 @@ UUPS proxies operate on a very similar mechanism to what is seen in a transparen
 
 At first, this might seem a little counter-intuitive. How does the implementation contract modify our proxy contract?
 
-Think back to the section on `delegateCall`, remember, anything invoked using `delegateCall` in our implementation contract will be executed
+Think back to the section on `delegateCall`, remember, anything invoked from our proxy contract (the methods in our implementation contract) using `delegateCall` will be executed
 within the scope of the proxy. So, when we execute `upgradeTo` using `delegateCall`, `upgradeTo` is able to modify the storage of our
 proxy contract (and in the case of a UUPS proxy, update the proxy's implementation address to the new implementation address).
 
