@@ -68,49 +68,75 @@ Every smart contract possesses the following components:
 As mentioned earlier, when we make use of a proxy, its storage will contain the address of the implementation contract, and we are able
 to "upgrade" the contract our users interact with by simply deploying a new implementation contract, and pointing our proxy to this new implementation contract.
 
-Let's think about a typical interaction between two smart contracts.
+Let's take a look at two basic smart contracts.
 
-**Smart Contract A**
+**Callee Contract**
 
-- Contains the following properties:
-  - (string) value
-- Contains the following function:
-  - setValue(string valueToSet)
-- When we call `setValue`, it modifies the storage of the smart contract, and sets `value` to `valueToSet`.
+```solidity
+contract Callee {
 
-**Smart Contract B**
+    private string[] values;
 
-- Contains the following function:
-  - callSetValue(string valueToPass)
-- When we call `callSetValue`, this function will execute a [message call](https://docs.soliditylang.org/en/latest/introduction-to-smart-contracts.html#message-calls)
-  in order to invoke `setValue` on `Smart Contract A`.
+    function storeValue(string value) public {
+      values.push(value);
+    }
+}
+```
 
-When we execute `callSetValue` on `Smart Contract B`, `Smart Contract B` will execute a
-message call on `Smart Contract A` resulting in `setValue` being invoked. When `setValue` runs it will modify the storage of
-`Smart Contract A`. As programmers, this is intuitive, its similar to how two classes might interact with each other.
+**Caller Contract**
 
-Now think about the above example in the context of a proxy. There is a logical gap/flaw, before reading on, try to work out what this
-might be, here are a couple of hints:
+```solidity
+contract Caller {
+    private address contractToCall;
 
-- Remember, the whole idea of a smart contract proxy is that we can simply point the proxy to a brand new implementation contract.
-- In our example above with contracts A & B, when B is invoked it makes a message call to contract A, and contract A's storage is modified.
+    constructor(address targetContract) {
+        contractToCall = targetContract;
+    }
+
+    function setAddress(address targetContractAddress) public {
+      address = targetContractAddress;
+    }
+
+    function storeAction(string value) public {
+      Callee contract = Callee.call(contractToCall);
+      contract.storeValue(value);
+    }
+}
+
+Callee {
+    function storeValue(string value);
+}
+```
+
+An interaction that stores a new value:
+
+1. User executes the `storeAction` function on `Caller`.
+2. `Caller` make a message call to `Callee.storeValue`.
+3. The storage of `Callee` is modified when the provided value is pushed on to the array.
+
+An interaction that updates to a new target:
+
+1. User creates upgraded `CalleeV2` contract.
+2. User calls `setAddress` with the address of `CalleeV2`.
+3. `Caller` will now interact with `CalleeV2`.
+
+Imagine if our proxy worked like this. Can you foresee any issues with this kind of implementation?
 
 ![hmmmmm](proxy_images/hmmm.jpg)
 
-So, hopefully you're now asking yourself:
-
-- Haven't we lost the state contained in our implementation contract once we point the proxy to a new implementation?
-- If we point our proxy to a new implementation contract, how is state retained (since state is stored in our implementation contract right)?
+Attempting to upgrade such a proxy would result in a loss of access to the `Callee` contract state.
+One would have to manually migrate all the new values across to `CalleeV2`, calling `storeValue` which is expensive and tedious.
 
 To understand how proxies maintain state, we need to look into a Solidity function called `delegateCall`, a special variant of a message call. `delegateCall` is **identical** to a message call, apart from the fact that **the code at the target address is executed in the context
 of the calling calling contract, and `msg.sender`/`msg.value` do not change their values**.
 
-Smart contract proxies _do not_ make use of message calls _and instead_ make use of `delegateCall`.
+Smart contract proxies _do not_ make use of message calls when calling the implementation contract _and instead_ make use of `delegateCall`.
 
 It's important to grasp the difference between a regular message call and `delegateCall`, and why a proxy would want to use `delegateCall`.
-The use of `delegateCall` ensures that, when we point our proxy to a new implementation contract, state is maintained.
+Given `delegateCall` makes it so the implementation code is executed within the context of the proxy, the proxy's storage will be used to store both the
+proxy's state, and the implementation's state.
 
-EIP-1967 was a standard that was proposed and accepted, its goal was to standardise the storage locations within the proxy
+EIP-1967 was a standard that was proposed and accepted, its goal was to standardise the storage slots within the proxy
 contract where proxy/implementation data is stored. Both UUPS and transparent upgradeable proxies can and should make use of this standard.
 Feel free to [read the EIP](https://eips.ethereum.org/EIPS/eip-1967) if you want to do a deeper dive, although I'd reccommend
 finishing this overview first.
