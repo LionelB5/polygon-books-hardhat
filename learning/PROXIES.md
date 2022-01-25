@@ -131,7 +131,7 @@ At the core of the proxy smart contract will be two functions:
 
 ![transparent proxy diagram](proxy_images/transparent_proxy.png)
 
-(Taken from [OpenZeppelin's workshop](https://youtu.be/kWUDTZhxKZI) on deploying more efficient upgradeable contracts, presented by
+(Image taken from [OpenZeppelin's workshop](https://youtu.be/kWUDTZhxKZI) on deploying more efficient upgradeable contracts, presented by
 Francisco Giordano)
 
 A transparent proxy has two separate "interfaces" it can reveal when a user calls it. There is an interface for the administrator, and
@@ -154,7 +154,7 @@ Such an abstraction helps keep the separation between admin/user interface clear
 
 ![proxy admin](proxy_images/proxy_admin.png)
 
-(Taken from [OpenZeppelin's workshop](https://youtu.be/kWUDTZhxKZI) on deploying more efficient upgradeable contracts, presented by
+(Image taken from [OpenZeppelin's workshop](https://youtu.be/kWUDTZhxKZI) on deploying more efficient upgradeable contracts, presented by
 Francisco Giordano)
 
 So, I bet you're thinking "transparent proxies sound awesome!", and they are! But there is a downside that should be considered.
@@ -248,7 +248,7 @@ Drawbacks of UUPS proxies:
 
 ![Proxy Gas Cost](proxy_images/proxy_gas_cost.png)
 
-(Taken from [OpenZeppelin's workshop](https://youtu.be/kWUDTZhxKZI) on deploying more efficient upgradeable contracts, presented by
+(Image taken from [OpenZeppelin's workshop](https://youtu.be/kWUDTZhxKZI) on deploying more efficient upgradeable contracts, presented by
 Francisco Giordano. These stats were published on June 21st 2021.)
 
 ## Conclusion
