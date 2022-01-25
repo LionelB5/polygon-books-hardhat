@@ -35,7 +35,7 @@ that was published to youtube.
 
 Put simply, smart contract proxies allow us to change the contract code, while preserving the state, balance, and address.
 
-At the time of writing, there are two popular standards that exist for implementing smart contract proxies:
+At the time of writing, there are four popular standards that exist for implementing smart contract proxies:
 
 - Transparent Upgradeable Proxy (currently used in this project)
 - UUPS (Universal Upgradeable Proxy Standard) Proxy
@@ -130,6 +130,7 @@ At the core of the proxy smart contract will be two functions:
 - `upgradeTo` - This is used to update the address of the implementation contract held in the proxy's storage.
 
 ![transparent proxy diagram](proxy_images/transparent_proxy.png)
+
 (Taken from [OpenZeppelin's workshop](https://youtu.be/kWUDTZhxKZI) on deploying more efficient upgradeable contracts, presented by
 Francisco Giordano)
 
@@ -152,6 +153,7 @@ as the 'admin' of the proxy. This contract acts as the real administrative inter
 Such an abstraction helps keep the separation between admin/user interface clear and reduces complexity.
 
 ![proxy admin](proxy_images/proxy_admin.png)
+
 (Taken from [OpenZeppelin's workshop](https://youtu.be/kWUDTZhxKZI) on deploying more efficient upgradeable contracts, presented by
 Francisco Giordano)
 
@@ -245,6 +247,7 @@ Drawbacks of UUPS proxies:
 **Cost Comparison**
 
 ![Proxy Gas Cost](proxy_images/proxy_gas_cost.png)
+
 (Taken from [OpenZeppelin's workshop](https://youtu.be/kWUDTZhxKZI) on deploying more efficient upgradeable contracts, presented by
 Francisco Giordano. These stats were published on June 21st 2021.)
 
