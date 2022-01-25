@@ -87,6 +87,7 @@ contract Callee {
 
 ```solidity
 contract Caller {
+
     private address contractToCall;
 
     constructor(address targetContract) {
@@ -103,7 +104,7 @@ contract Caller {
     }
 }
 
-Callee {
+contract Callee {
     function storeValue(string value);
 }
 ```
