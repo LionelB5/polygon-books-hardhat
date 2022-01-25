@@ -7,6 +7,7 @@ import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
 import "hardhat-deploy";
 import "hardhat-gas-reporter";
+import "@openzeppelin/hardhat-upgrades";
 import "solidity-coverage";
 
 dotenv.config();
@@ -34,8 +35,8 @@ const config: HardhatUserConfig = {
     ],
   },
   networks: {
-    polygon_testnet: {
-      url: "https://rpc-mumbai.maticvigil.com",
+    mumbai: {
+      url: "https://matic-mumbai.chainstacklabs.com",
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
@@ -50,8 +51,8 @@ const config: HardhatUserConfig = {
   namedAccounts: {
     deployer: {
       default: 0,
-      1: 0,
     },
+    proxyOwner: { default: 1 },
   },
 };
 
