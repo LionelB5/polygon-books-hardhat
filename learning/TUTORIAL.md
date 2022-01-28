@@ -12,8 +12,7 @@ This tutorial is inspired by, and draws heavily on the knowledge shared in Patri
 
 ## Getting started
 
-**Note:** This project has evolved since writing this tutorial, checkout the following commit to ensure you are
-using a version of this project compatible with this tutorial: `f586542b2eb9c4ce8903469883215c1ca70c735c`
+If you intend on following this tutorial, you should checkout the: `simple-contract` branch.
 
 Ensure you have followed the following sections described in the `README.md`:
 
@@ -257,9 +256,8 @@ function setTokenURI(uint256 tokenId, string memory _tokenURI) public {
 
 ```
 
-So, this simple function allows us to set the `tokenURI`. Unlike what is done in our contract, usually you'd restrict the token owner
-from updating the metadata, and only allow approved users (i.e the creator of the contract, other approved technical staff) to update
-the metadata of the token.
+This simple function allows us to set the `tokenURI`, it restricts access so only the token owner, or accounts on the tokens
+approve list can actually set a new URI.
 
 So, once your metadata is uploaded to IPFS, navigate to PolygonScan, and execute the `setTokenURI` function, providing a URI pointing
 to your file stored in IPFS.
