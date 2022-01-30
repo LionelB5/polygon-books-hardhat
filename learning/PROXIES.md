@@ -139,7 +139,7 @@ proxy's state, and the implementation's state.
 
 EIP-1967 was a standard that was proposed and accepted, its goal was to standardise the storage slots within the proxy
 contract where proxy/implementation data is stored. Both UUPS and transparent upgradeable proxies can and should make use of this standard.
-Feel free to [read the EIP](https://eips.ethereum.org/EIPS/eip-1967) if you want to do a deeper dive, although I'd reccommend
+Feel free to [read the EIP](https://eips.ethereum.org/EIPS/eip-1967) if you want to do a deeper dive, although I'd recommend
 finishing this overview first.
 
 Now we're ready to move on to some specifics about transparent upgradeable proxies and UUPS proxies.

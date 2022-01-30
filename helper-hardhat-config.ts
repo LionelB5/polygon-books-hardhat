@@ -24,7 +24,7 @@ export const networkConfig: networkConfigInfo = {
       "0x6c3699283bda56ad74f6b855546325b68d482e983852a7a82979cc4807b641f4",
   },
   80001: {
-    name: "polygon_testnet",
+    name: "mumbai",
     linkToken: "0x326C977E6efc84E512bB9C30f76E30c160eD06FB",
     keyHash:
       "0x6e75b569a01ef56d18cab6a8e71e6600d6ce853834d4a5748b720d06f878b3a4",

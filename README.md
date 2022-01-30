@@ -139,6 +139,8 @@ npx hardhat console --network mumbai
 
 #### Verifying our contract
 
+**Note**: Not updated yet for verification of proxy/implementation contracts.
+
 If we want to be able to browse the source code of our contract on PolygonScan (and not just view the bytecode) we will
 need to verify the contract using PolygonScan's API. Doing so will also let us interact with all of our contract's functions
 via MetaMask.
