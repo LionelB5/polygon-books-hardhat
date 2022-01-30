@@ -55,7 +55,7 @@ Sign up for an account on [PolygonScan](https://polygonscan.com/).
 
 Once signed up, navigate to your account and obtain an API Key.
 
-Populate your API key in your `.env` file (POLYGONSCAN_API_KEY).
+Populate your API key in your `.env` file (POLYGON_SCAN_API_KEY).
 
 Once this is done, you'll be easily able to verify your contract using the `npx hardhat verify` command.
 
@@ -139,18 +139,48 @@ npx hardhat console --network polygon_testnet
 
 If we want to be able to browse the source code of our contract on PolygonScan (and not just view the bytecode) we will
 need to verify the contract using PolygonScan's API. Doing so will also let us interact with all of our contract's functions
-via MetaMask.
+via Polygonscan & MetaMask.
 
-To verify the contract, execute the following command:
+The hardhat verify command expects the following:
 
 ```
-npx hardhat verify --network polygon_testnet <contract address> <... parameters provided to contract constructor at deploy time>
+npx hardhat verify --network polygon_testnet <contract address> < ... parameters provided to contract constructor at deploy time >
 ```
+
+So, to verify the CryptoBooks contract, we'd have to provide the following:
+
+```
+npx hardhat verify --network polygon_testnet <contract address> <_VRFCoordinator> <_LinkToken> <_keyHash> <_chainlinkFee>
+```
+
+To determine the parameters provided to the contract constructor at deploy time, we need to take a look at the constructor
+for the `CryptoBooks` contract in `contracts/CryptoBooks.sol`. We see the constructor accepts four arguments:
+
+- \_VRFCoordinator
+  - The address of Chainlink's VRF (Verifiable Random Function) coordinator, required to intialize the `VRFConsumerBase` superclass.
+- \_LinkToken
+  - The address of the LinkToken contract, required to initialize the `VRFConsumerBase` superclass.
+- \_keyHash
+  - The key hash to provide when making a request to the Chainlink VRF oracle.
+- \_chainlinkFee
+  - The fee to pay when requesting a random number via Chainlink's VRF
+
+The values provided to the constructor at deployment time vary on the environment being deployed to. For instance, for deployments
+on the hardhat or local network, some addresses such as the `_VRFCoordinator` address will point to a mock contract instead.
+
+Constructor argument values that are static (and not derived at deploy time) can be found in the `helper-hardhat-config.ts` file.
+You'll notice some values are missing for the hardhat and localhost networks. In particular, the `_VRFCoordinator` and `LinkToken`
+addresses or omitted for both local networks. This is because, for deployments to these environments, we will deploy mock
+VRFCoordinator and LinkToken contracts, and will determine the addresses of these contracts and supply the addresses to the
+contructor at deploy time.
+
+When deploying to the Polygon Testnet, only hardcoded values are used, nothing is determined dynamically. You can retrieve all
+the necesarry values by browsing the `helper-hardhat-config.ts` file (under the `80001` key, representing the chain ID).
 
 For example, to verify the contract in this repository you would execute:
 
 ```
-npx hardhat verify --network polygon_testnet <contract address> 0x8C7382F9D8f56b33781fE506E897a4F1e2d17255 0x326C977E6efc84E512bB9C30f76E30c160eD06FB 0x6e75b569a01ef56d18cab6a8e71e6600d6ce853834d4a5748b720d06f878b3a4
+npx hardhat verify --network polygon_testnet <contract address> 0x8C7382F9D8f56b33781fE506E897a4F1e2d17255 0x326C977E6efc84E512bB9C30f76E30c160eD06FB 0x6e75b569a01ef56d18cab6a8e71e6600d6ce853834d4a5748b720d06f878b3a4 100000000000000000
 ```
 
 TODO: This verification process should be easily automatable (prevent having to provide parameters manually)
